@@ -1,0 +1,37 @@
+<div class="dashboard-wrapper">
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      Avaami<span>Payroll</span>
+    </div>
+    
+    <nav class="nav-menu">
+      <a routerLink="/home" routerLinkActive="active-link" class="nav-item">
+        <span class="icon">📊</span> Dashboard
+      </a>
+      <a routerLink="/employees" routerLinkActive="active-link" class="nav-item">
+        <span class="icon">👥</span> Employees
+      </a>
+      <a routerLink="/payroll" routerLinkActive="active-link" class="nav-item">
+        <span class="icon">💰</span> Payroll
+      </a>
+      <a routerLink="/settings" class="nav-item">
+        <span class="icon">⚙️</span> Settings
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button routerLink="/login" class="btn-logout">Logout</button>
+    </div>
+  </aside>
+
+  <main class="main-container">
+    <header class="top-nav">
+      <h1>Payroll Overview</h1>
+      <div class="user-info">Welcome, Admin</div>
+    </header>
+
+    <div class="content-body">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

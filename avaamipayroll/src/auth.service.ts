@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
-import { Auth, createUserWithEmailAndPassword, updateProfile } from '@angular/fire/auth';
+import { Auth, createUserWithEmailAndPassword, updateProfile, user } from '@angular/fire/auth';
 import { Firestore, doc, setDoc, serverTimestamp } from '@angular/fire/firestore'; // Added Firestore imports
-import { from, Observable, switchMap } from 'rxjs';
+import { from, Observable, switchMap, firstValueFrom } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -31,5 +31,15 @@ export class AuthService {
       });
 
     return from(promise);
+  }
+  async getIdToken(): Promise<string> {
+    // Get the current user observable and take the first value
+    const currentUser = await firstValueFrom(user(this.auth));
+    
+    if (currentUser) {
+      // Force refresh the token to ensure it's valid
+      return await currentUser.getIdToken(true);
+    }
+    return '';
   }
 }

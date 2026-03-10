@@ -129,3 +129,19 @@ input.error {
   text-decoration: none;
   font-weight: 600;
 }
+
+.error-banner {
+  background-color: #fee2e2;
+  color: #b91c1c;
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  font-size: 14px;
+  border: 1px solid #fecaca;
+  text-align: center;
+}
+
+input.error {
+  border-color: #ef4444 !important;
+  background-color: #fef2f2;
+}

@@ -1,0 +1,51 @@
+<div class="form-container">
+  <div class="form-header">
+    <h2>Add New Employee</h2>
+    <p>Enter the details to register a new staff member in Avaami Demo.</p>
+  </div>
+
+  <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()" class="employee-form">
+    <div class="form-grid">
+      <div class="form-group">
+        <label>First Name</label>
+        <input type="text" formControlName="first_name" placeholder="e.g. John">
+      </div>
+
+      <div class="form-group">
+        <label>Last Name</label>
+        <input type="text" formControlName="last_name" placeholder="e.g. Doe">
+      </div>
+
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" formControlName="email" placeholder="john@example.com">
+      </div>
+
+      <div class="form-group">
+        <label>Designation</label>
+        <input type="text" formControlName="designation" placeholder="e.g. Full Stack Developer">
+      </div>
+
+      <div class="form-group">
+        <label>Joining Date</label>
+        <input type="date" formControlName="joining_date">
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn-cancel" routerLink="/employees">Cancel</button>
+      <button type="submit" class="btn-save" [disabled]="!employeeForm.valid">Save Employee</button>
+    </div>
+  </form>
+</div>
+
+<div class="overlay" *ngIf="showSuccessPopup">
+  <div class="popup-card">
+    <div class="icon-circle">
+      <span class="checkmark">✓</span>
+    </div>
+    <h3>Success!</h3>
+    <p>New employee has been added to Avaami Demo successfully.</p>
+    <button (click)="closePopup()" class="btn-continue">Continue to List</button>
+  </div>
+</div>

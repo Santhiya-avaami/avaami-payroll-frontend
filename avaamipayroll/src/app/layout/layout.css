@@ -1,0 +1,80 @@
+.dashboard-wrapper {
+  display: flex;
+  height: 100vh;
+  background-color: #f8fafc;
+}
+
+.sidebar {
+  width: 260px;
+  background-color: #0f172a; /* Professional Dark Slate */
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+}
+
+.sidebar-logo {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #6366f1;
+  margin-bottom: 2.5rem;
+}
+
+.sidebar-logo span { color: white; }
+
+.nav-menu {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 0.8rem 1rem;
+  color: #94a3b8;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.nav-item:hover, .active-link {
+  background-color: #1e293b;
+  color: white;
+}
+
+.icon { margin-right: 12px; }
+
+.main-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.top-nav {
+  height: 64px;
+  background: white;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+}
+
+.top-nav h1 { font-size: 1.25rem; color: #1e293b; }
+
+.content-body {
+  padding: 2rem;
+}
+
+.btn-logout {
+  width: 100%;
+  background: #334155;
+  color: white;
+  border: none;
+  padding: 0.6rem;
+  border-radius: 6px;
+  cursor: pointer;
+}

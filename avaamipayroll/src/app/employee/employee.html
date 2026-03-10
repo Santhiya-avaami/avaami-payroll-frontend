@@ -1,0 +1,38 @@
+<div class="page-header">
+  <div>
+    <h1>Employees</h1>
+    <p>Manage your organization's staff members</p>
+  </div>
+  <button class="btn-add" routerLink="/add-employee">+ Add Employee</button>
+</div>
+
+<div class="table-container">
+  <table class="employee-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Department</th>
+        <th>Role</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let emp of employees">
+        <td>{{ emp.id }}</td>
+        <td class="emp-name">{{ emp.name }}</td>
+        <td>{{ emp.department }}</td>
+        <td>{{ emp.role }}</td>
+        <td>
+          <span class="status-badge" [ngClass]="emp.status.toLowerCase().replace(' ', '-')">
+            {{ emp.status }}
+          </span>
+        </td>
+        <td>
+          <button class="btn-edit">Edit</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

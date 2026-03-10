@@ -31,9 +31,23 @@
         <span>Log In</span>
       </button>
 
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <div class="error-banner" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="auth-form">
+      <button type="submit" class="btn-signup" [disabled]="loginForm.invalid">
+        <span>Log In</span>
+      </button>
+
       <div class="auth-footer">
         <p>Don't have an account? <a routerLink="/signup">Sign up</a></p>
       </div>
+    </form>
+  </div>
+</div>
     </form>
   </div>
 </div>

@@ -1,12 +1,11 @@
 export const environment = {
   production: false,
   firebase: {
-  apiKey: "AIzaSyC7CWziP7PeHH_ZeC-wmEFKzC1zB76gD4Q",
-  authDomain: "avaamipayroll-f0b70.firebaseapp.com",
-  projectId: "avaamipayroll-f0b70",
-  storageBucket: "avaamipayroll-f0b70.firebasestorage.app",
-  messagingSenderId: "913971527348",
-  appId: "1:913971527348:web:3b48b74c52b02b5dd4e1e1",
-  measurementId: "G-DW58K3LQRC"
-  }
-};
+  apiKey: "AIzaSyBewCjdIhaBWW_t3lir-U6WLYw1O6d2xpQ",
+  authDomain: "avaamipayroll.firebaseapp.com",
+  projectId: "avaamipayroll",
+  storageBucket: "avaamipayroll.firebasestorage.app",
+  messagingSenderId: "269676050252",
+  appId: "1:269676050252:web:88f065dcc70110514b01e9",
+  measurementId: "G-4E4EXY18V4"
+}};
