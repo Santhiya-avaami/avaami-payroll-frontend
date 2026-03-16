@@ -1,45 +1,62 @@
 import { Injectable, inject } from '@angular/core';
 import { Auth, createUserWithEmailAndPassword, updateProfile, user } from '@angular/fire/auth';
-import { Firestore, doc, setDoc, serverTimestamp } from '@angular/fire/firestore'; // Added Firestore imports
+import { Firestore, doc, setDoc, serverTimestamp } from '@angular/fire/firestore';
+import { HttpClient } from '@angular/common/http';
 import { from, Observable, switchMap, firstValueFrom } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private auth = inject(Auth);
-  private firestore = inject(Firestore); // Inject Firestore
+  private firestore = inject(Firestore);
+  private http = inject(HttpClient);
 
-  signUp(email: string, password: string, displayName: string): Observable<void> {
-    const promise = createUserWithEmailAndPassword(this.auth, email, password)
+  private djangoApiUrl = 'http://127.0.0.1:8000/api/register-company/';
+
+  signUp(email: string, password: string, displayName: string, role: string, extraData: any): Observable<any> {
+    const firebasePromise = createUserWithEmailAndPassword(this.auth, email, password)
       .then(async (response) => {
-        const user = response.user;
+        const userInstance = response.user;
+        await updateProfile(userInstance, { displayName });
 
-        // 1. Update the Auth Profile (for immediate UI usage)
-        await updateProfile(user, { displayName });
-
-        // 2. Create the Firestore Document reference
-        // We use the UID from Auth as the Document ID in the 'users' collection
-        const userDocRef = doc(this.firestore, `users/${user.uid}`);
-
-        // 3. Save the user data to Firestore
-        return setDoc(userDocRef, {
-          uid: user.uid,
-          displayName: displayName,
-          email: email,
-          role: 'user', // Default role
-          createdAt: serverTimestamp(), // Uses Firebase server time
+        const userDocRef = doc(this.firestore, `users/${userInstance.uid}`);
+        await setDoc(userDocRef, {
+          uid: userInstance.uid,
+          displayName,
+          email,
+          role,
+          ...extraData,
+          createdAt: serverTimestamp(),
         });
+
+        return {
+          firebase_uid: userInstance.uid,
+          email,
+          username: displayName,
+          role,
+          ...extraData
+        };
       });
 
-    return from(promise);
+    return from(firebasePromise).pipe(
+      switchMap(payload => this.http.post(this.djangoApiUrl, payload))
+    );
   }
+
+  /**
+   * FIX: Added/Verified getIdToken method
+   */
   async getIdToken(): Promise<string> {
-    // Get the current user observable and take the first value
-    const currentUser = await firstValueFrom(user(this.auth));
+    // This gets the currently logged in user from Firebase
+    const currentUser = this.auth.currentUser;
     
     if (currentUser) {
-      // Force refresh the token to ensure it's valid
+      // Force refresh ensures we have the latest token
       return await currentUser.getIdToken(true);
     }
     return '';
   }
+  getUserProfile(token: string): Observable<any> {
+    const headers = { 'Authorization': `Bearer ${token}` };
+    return this.http.get('http://127.0.0.1:8000/api/user-profile/', { headers });
+}
 }

@@ -2,7 +2,8 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Auth, signInWithEmailAndPassword } from '@angular/fire/auth'; // 1. Import Firebase Auth
+import { Auth, signInWithEmailAndPassword } from '@angular/fire/auth';
+import { AuthService } from '../../auth.service'; // Ensure this path is correct
 
 @Component({
   selector: 'app-login',
@@ -14,9 +15,10 @@ import { Auth, signInWithEmailAndPassword } from '@angular/fire/auth'; // 1. Imp
 export class LoginComponent {
   private fb = inject(FormBuilder);
   private router = inject(Router);
-  private auth = inject(Auth); // 2. Inject Auth service
+  private auth = inject(Auth);
+  private authService = inject(AuthService); // Inject your custom service
 
-  errorMessage: string | null = null; // To display errors
+  errorMessage: string | null = null;
 
   loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -25,20 +27,37 @@ export class LoginComponent {
 
   async onLogin() {
     if (this.loginForm.valid) {
-      this.errorMessage = null; // Clear old errors
+      this.errorMessage = null;
       const email = this.loginForm.value.email!;
       const password = this.loginForm.value.password!;
 
       try {
-        // 3. Attempt real Firebase login
+        // Step 1: Firebase Authentication
         const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
-        console.log('User logged in successfully:', userCredential.user);
-        
-        // 4. Redirect to employee list or dashboard
-        this.router.navigate(['/employees']); 
+        console.log('Firebase login success:', userCredential.user.email);
+
+        // Step 2: Get the Token
+        const token = await this.authService.getIdToken();
+
+        // Step 3: Get Role from Django and Redirect
+        this.authService.getUserProfile(token).subscribe({
+          next: (profile) => {
+            console.log('Django Profile Loaded:', profile);
+            
+            if (profile.role === 'admin') {
+              this.router.navigate(['/employees']); // Admins go to Employee List
+            } else {
+              this.router.navigate(['/employee-dashboard']); // Employees like Bubu go here
+            }
+          },
+          error: (err) => {
+            console.error('Django Profile Error:', err);
+            this.errorMessage = 'Account authenticated but profile not found in Payroll system.';
+          }
+        });
+
       } catch (error: any) {
         console.error('Login Error:', error.code);
-        // 5. Map Firebase error codes to readable messages
         this.handleAuthError(error.code);
       }
     }
@@ -52,14 +71,11 @@ export class LoginComponent {
       case 'auth/user-not-found':
         this.errorMessage = 'No account exists with this email.';
         break;
-      case 'auth/wrong-password':
-        this.errorMessage = 'Incorrect password. Please try again.';
-        break;
       case 'auth/too-many-requests':
         this.errorMessage = 'Too many failed attempts. Try again later.';
         break;
       default:
-        this.errorMessage = 'An unexpected error occurred. Please try again.';
+        this.errorMessage = 'Login failed. Please try again.';
     }
   }
 }
